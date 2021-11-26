@@ -1,9 +1,6 @@
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -20,6 +17,7 @@ public class Main extends Application {
 
         GameScene theScene = new GameScene(pane, 600,400);
         theScene.setFill(Color.rgb(0,153,255));
+        primaryStage.setResizable(false);
         primaryStage.setScene(theScene);
 
         /**

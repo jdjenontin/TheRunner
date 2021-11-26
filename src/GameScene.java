@@ -1,15 +1,13 @@
 import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
-import javafx.scene.effect.Effect;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 import java.util.ArrayList;
-import java.util.Random;
-
 
 /**
  * Class: GameScene
@@ -18,7 +16,7 @@ import java.util.Random;
 
 public class GameScene extends Scene {
 
-    public enum GameState {START, PLAYING, PAUSE, GAMEOVER};
+    public enum GameState {START, PLAYING, PAUSE, GAMEOVER, RESTART};
 
     private GameState gameState;
 
@@ -29,6 +27,7 @@ public class GameScene extends Scene {
     //Background
     private staticThing left;
     private staticThing right;
+    private staticThing bg0;
 
     private staticThing vies;
     private staticThing game0;
@@ -49,7 +48,7 @@ public class GameScene extends Scene {
     private int valScore;
 
     //Start text
-    private  Text start ;
+    private  ImageView start ;
 
     GameScene(Pane pane, int width, int height){
         super(pane, width, height);
@@ -64,6 +63,9 @@ public class GameScene extends Scene {
         //Right BG
         this.right = new staticThing(-this.camera.getX()+bgL,-this.camera.getY(), "img/desert.png");
         this.right.getImageView().setViewport(new Rectangle2D(0,0,bgL, bgH));
+
+        //BG0
+        this.bg0 = new staticThing(-700,0, "img/desert.png");
 
         //Vies
         this.vies = new staticThing(0,0,"img/vies.png");
@@ -97,13 +99,14 @@ public class GameScene extends Scene {
         score.setFont(new Font(20));
 
         //Start
-        start = new Text("Press S to START");
-        start.setY(380);
-        start.setX(200);
-        start.setFont(new Font(30));
+        start = new ImageView("Img/TheRunner.png");
+        start.setY(31);
+        start.setX(0);
+        start.setViewport(new Rectangle2D(0,0,600,338));
+
 
         //Adding nodes
-        pane.getChildren().addAll(left.getImageView(), right.getImageView(), vies.getImageView(), hero.getImageView(), foe1.getImageView(),
+        pane.getChildren().addAll(bg0.getImageView(),left.getImageView(), right.getImageView(), vies.getImageView(), hero.getImageView(), foe1.getImageView(),
                 foe2.getImageView(), foe3.getImageView(), score, start);
 
 
@@ -124,7 +127,7 @@ public class GameScene extends Scene {
 
                     case S ->{
                         gameState=GameState.PLAYING;
-                        start.setOpacity(0);
+                        pane.getChildren().remove(start);
                         break;
                     }
 
@@ -133,7 +136,24 @@ public class GameScene extends Scene {
                         break;
                     }
                     case R->{
-                        // A gérer
+                        //gameState=GameState.RESTART;
+                        //hero = new Hero(0, 250, "img/heros.png");
+                        if(gameState==GameState.GAMEOVER) {
+                            pane.getChildren().remove(game0.getImageView());
+                            /*game0 = new staticThing(0,100, "img/gameover.gif");
+                            game0.getImageView().setViewport(new Rectangle2D(0,0,600,180));*/
+                            hero.setNumberOfLives(3);
+                            hero.setX(0);
+                            hero.setY(250);
+                            foe1.setX(600);
+                            foe2.setX(foe1.getX()+300*Math.random()+300);
+                            foe3.setX(foe2.getX()+300*Math.random()+300);
+                            valScore=0;
+                            rep=1;
+                            score.setText("Score :"+valScore);
+                            pane.getChildren().addAll(start, vies.getImageView());
+                            gameState = GameState.START;
+                        }
                         break;
                     }
 
@@ -152,8 +172,6 @@ public class GameScene extends Scene {
         foe3.update(time);
 
         hero.update(time, foe1, foe2, foe3);
-       /* hero.update(time, foe2);
-        hero.update(time, foe3);*/
 
         /// Collision cheking
         if(this.invincibility<0){
@@ -181,6 +199,7 @@ public class GameScene extends Scene {
             rep++;
             valScore++;
             score.setText("Score: "+valScore);
+            hero.setVx(hero.getVx()+1);
         }
         // Xs management
         if(rep % 2 == 1){
@@ -191,16 +210,30 @@ public class GameScene extends Scene {
             left.getImageView().setX(bgL*rep-camera.getX());
             right.getImageView().setX(bgL*(rep-1) -camera.getX());
         }
+        bg0.getImageView().setX(bgL*(rep-2) -camera.getX());
 
         //Vies update
         if(hero.getNumberOfLives()>0){
             vies.getImageView().setViewport(new Rectangle2D(0,0,hero.getNumberOfLives()*20,19 ));
+        } else if(hero.getNumberOfLives()==0){
+            pane.getChildren().remove(vies.getImageView());
         }
 
 
         // Ys management
-        left.getImageView().setY(-camera.getY());
-        right.getImageView().setY(-camera.getY());
+        if(camera.getY()<0) {
+            System.out.println("CAM: "+camera.getY());
+            left.getImageView().setY(-camera.getY());
+            right.getImageView().setY(-camera.getY());
+            bg0.getImageView().setY(-camera.getY());
+        }else{
+            System.out.println("CAM: "+camera.getY());
+            left.getImageView().setY(0);
+            right.getImageView().setY(0);
+            bg0.getImageView().setY(0);
+        }
+
+
 
         // Hero ImageView
         hero.getImageView().setX(hero.getX()-camera.getX()+100);
@@ -227,6 +260,7 @@ public class GameScene extends Scene {
         //Game Over
         if(hero.getNumberOfLives()<0){
             this.gameState = GameState.GAMEOVER;
+
             pane.getChildren().add(game0.getImageView());
         }
 

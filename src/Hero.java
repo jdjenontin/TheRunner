@@ -45,28 +45,9 @@ public class Hero extends AnimatedThing{
 
 
             this.getImageView().setViewport(new Rectangle2D(getViewportx(this.index)[0], getViewportx(this.index)[1], getWidth(this.index), 100));
-            //this.getImageView().setX(x);
-            //this.getImageView().setY(y);
 
             this.hitBox = new Rectangle2D(this.imageView.getX(), this.imageView.getY()-5, 70, 75);
 
-            // Collision checking and invincibility setting
-           /* System.out.println("Invinci: "+this.invincibility);
-           if(this.invincibility>0) {
-                //System.out.println(time);
-                this.getImageView().setOpacity(0.5);
-                this.invincibility-=btwUpdate;
-                System.out.println("FUCK!!");
-            }
-            else{
-                this.checkCollision(foe1.getHitBox());
-                this.checkCollision(foe2.getHitBox());
-                this.checkCollision(foe3.getHitBox());
-                System.out.println("Rectangle : "+foe1+" "+foe1.getHitBox().getMinX());
-                System.out.println("Rectangle : "+foe2+" "+foe2.getHitBox().getMinX());
-                System.out.println("Rectangle : "+foe3+" "+foe3.getHitBox().getMinX());
-                this.getImageView().setOpacity(1);
-            }*/
 
             System.out.println("numberOfLives: "+this.numberOfLives);
 
@@ -87,6 +68,14 @@ public class Hero extends AnimatedThing{
         this.vx++;
     }
 
+
+    public void setVx(int vx) {
+        this.vx = vx;
+    }
+
+    public int getVx() {
+        return vx;
+    }
 
     /**
      * Check if a collision with a foe occurred

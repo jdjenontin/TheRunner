@@ -26,7 +26,7 @@ public abstract class AnimatedThing {
         this.imageView = new ImageView(fileName);
         this.imageView.setX(x);
         this.imageView.setY(y);
-        this.animationDuration = 1e8/2;
+        this.animationDuration = 1e8;
 
 
     }

@@ -12,7 +12,7 @@ public class Foe extends AnimatedThing{
             this.x -= 15; //To move the foe
             // Change the position of the position of the animatesThing
             this.imageView.setX(x);
-            this.hitBox = new Rectangle2D(this.imageView.getX(), this.imageView.getY()-10, 58, 89);
+            this.hitBox = new Rectangle2D(this.imageView.getX()+5, this.imageView.getY(), 48, 89);
             lastUpdate=time;
         }
     }
